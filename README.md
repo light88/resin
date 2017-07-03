@@ -26,23 +26,6 @@ ResinDB is designed to be used as
 
 ResinDB's architecture can be compared to that of LevelDB or SQL Server LocalDB in that they all run in-process. What sets ResinDB apart is its full-text search index, its scoring mechanisms and its latch-free writing.
 
-## DocumentTable
-
-A document table is a table where  
-
-- each row has a variable amount of named columns
-- each column is a variable length byte array
-
-A normal table, such as one from a RDBM system, does not allow storing of data in this fashion. A document table is a specialized table made for document database use cases.
-
-On disk a document table can be represented as a file with a header and a body where the header is a column name index and where each row contains alternating keyID and value blocks, one pair for each of its columns. A value block is a byte array prepended with a size byte array. The max size of a value byte array is sizeof(int).
-
-The name (key) of each column is a variable length byte array with a max size of sizeof(int).
-
-A document table can contain a maximum of 32767 distinctly named columns (i.e. sizeof(short)) and a maximum of 2.147483647 x 10^9 rows (i.e. sizeof(int)).
-
-[DocumentTable specification](DocumentTable.md)  
-
 ## Usage
 ### CLI
 Clone the source or [download the latest source as a zip file](https://github.com/kreeben/resin/archive/master.zip), build and run the CLI (rn.bat) with the following arguments:
@@ -104,6 +87,23 @@ _Download Wikipedia as JSON [here](https://dumps.wikimedia.org/wikidatawiki/enti
 	var scoreOfFirstDoc = result.Docs[0].Score;
 	var label = result.Docs[0].Fields["label"];
 	var primaryKey = result.Docs[0].Fields["id"];
+	
+## DocumentTable
+
+A document table is a table where  
+
+- each row has a variable amount of named columns
+- each column is a variable length byte array
+
+A normal table, such as one from a RDBM system, does not allow storing of data in this fashion. A document table is a specialized table made for document database use cases.
+
+On disk a document table can be represented as a file with a header and a body where the header is a column name index and where each row contains alternating keyID and value blocks, one pair for each of its columns. A value block is a byte array prepended with a size byte array. The max size of a value byte array is sizeof(int).
+
+The name (key) of each column is a variable length byte array with a max size of sizeof(int).
+
+A document table can contain a maximum of 32767 distinctly named columns (i.e. sizeof(short)) and a maximum of 2.147483647 x 10^9 rows (i.e. sizeof(int)).
+
+[DocumentTable specification](DocumentTable.md)  
 
 ## Disk-based concurrent read/write
 Resin is a library, not a service. It runs inside of your application's memory space. Because of that ResinDB has been optimized to be able to immediately respond to queries without having to first rebuild data structures in-memory. 
