@@ -39,7 +39,7 @@ On disk a document table can be represented as a file with a header and a body w
 
 The name (key) of each column is a variable length byte array with a max size of sizeof(int).
 
-A document table can contain a maximum of 32767 distinctly named columns (sizeof(short)).
+A document table can contain a maximum of 32767 distinctly named columns (i.e. sizeof(short)) and a maximum of 2.147483647 x 10^9 rows (i.e. sizeof(int)).
 
 [DocumentTable specification](DocumentTable.md)  
 
