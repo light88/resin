@@ -90,22 +90,12 @@ _Download Wikipedia as JSON [here](https://dumps.wikimedia.org/wikidatawiki/enti
 	
 ## DocumentTable
 
-A document table is a table where  
+A document table is a schemaless table where
 
-- each row has a variable amount of named columns
-- each column is a variable length byte array
+each row has a variable amount of named columns
+each column is a variable length byte array
 
-A normal table, such as one from a RDBM system, does not allow storing of data in this fashion. A document table is a specialized table made for document database use cases.
-
-On disk a document table can be represented as a header file and a table file where the header file is a column name index and where each row in the table file contains alternating keyID and value blocks, one pair for each of the row's columns. 
-
-A value block is a byte array that has been prepended with a integer describing the array's size.
-
-The name (key) of each column is also a variable length byte array with the same size restrictions as the value byte array, also prepended with a integer.
-
-A document table can contain a maximum of 32767 distinctly named columns (i.e. `sizeof(short)`) and a maximum of 2.1 x 10^9 rows (i.e. `sizeof(int)`).
-
-[DocumentTable specification](DocumentTable.md)  
+More about [DocumentTable](DocumentTable.md)  
 
 ## Disk-based concurrent read/write
 Resin is a library, not a service. It runs inside of your application's memory space. Because of that ResinDB has been optimized to be able to immediately respond to queries without having to first rebuild data structures in-memory. 
