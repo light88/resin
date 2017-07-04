@@ -92,8 +92,8 @@ _Download Wikipedia as JSON [here](https://dumps.wikimedia.org/wikidatawiki/enti
 
 A document table is a schemaless table where
 
-each row has a variable amount of named columns
-each column is a variable length byte array
+- each row has a variable amount of named columns  
+- each column is a variable length byte array
 
 More about [DocumentTable](DocumentTable.md)  
 
