@@ -40,7 +40,7 @@ To fetch a row from the table you need to know the starting byte position of the
 
 A block info is a tuple containing the starting byte position (long) of a block of data and its size (int). A block info is thus fixed in size. 
 
-A block info file containing block info tuples that have been serialized into a bitmap, each block ordered by the index of the document table row it points to, can act as an index into a document table that is at most 9.223372036854775807 x 10^18 bytes long (i.e. sizeof(long).
+A block info file containing block info tuples that have been serialized into a bitmap, each block ordered by the index of the document table row it points to, can act as an index into a document table that is at most 9.2 x 10^18 bytes long (i.e. sizeof(long).
 
 ## Compression/encoding
 
