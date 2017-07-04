@@ -11,7 +11,7 @@ On disk a document table can be represented as a header file and a table file wh
 
 A value block is a byte array prepended with a size byte array. The max size of a value byte array is sizeof(int).
 
-The name (key) of each column is a variable length byte array with a max size of sizeof(int).
+The name (key) of each column is a variable length byte array that can be at most 2.1M bytes long (i.e. sizeof(int)).
 
 A document table can contain a maximum of 32767 distinctly named columns (i.e. sizeof(short)) and a maximum of 2.147483647 x 10^9 rows (i.e. sizeof(int)).
 
