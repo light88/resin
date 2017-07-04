@@ -3,14 +3,14 @@
 [![NuGet Version](https://img.shields.io/badge/nuget-v1.0.0.0-blue.svg)](https://www.nuget.org/packages/ResinDB)
 [![Gitter](https://img.shields.io/gitter/room/nwjs/nw.js.svg)](https://gitter.im/ResinDB/Lobby?utm_source=share-link&utm_medium=link&utm_campaign=share-link)
 
-ResinDB is a cross-platform document database and search engine with a query language, API and CLI. A performant database with a unique feature set:  
+ResinDB is a document database and search engine with a query language, API and CLI. It has a unique feature set:  
 
-Feature | ResinDB | Lucene | SQL Server LocalDB | LevelDB | RocksDB
+Feature | ResinDB | Lucene | SQL Server LocalDB | RocksDB | LevelDB
 --- | --- | --- | --- | --- | ---
 Runs in-process | &#9989; | &#9989; | &#9989; | &#9989; | &#9989;
 Is schema-less | &#9989; | &#9989; |   | &#9989; | &#9989;
 Can compress data | &#9989; | &#9989; |  | &#9989; | &#9989;
-Runs on Windows and Linux | &#9989; | &#9989; |   |   | &#9989;
+Runs on Windows and Linux | &#9989; | &#9989; |   | &#9989; |  
 Has a query language | &#9989; | &#9989; | &#9989; |   |  
 Is full-text search engine | &#9989; | &#9989; |   |   |   |  
 Has latch-free writing | &#9989; |   |   |   |  
@@ -24,7 +24,7 @@ Has pluggable storage engine | &#9989; |   |   |   |
 - a component of a distributed database/search engine
 - a framework for experimenting with scoring models 
 
-ResinDB's architecture can be compared to that of LevelDB or SQL Server LocalDB in that they all run in-process. What sets ResinDB apart is its full-text search index, its scoring mechanisms and its latch-free writing.
+ResinDB's architecture can be compared to that of LevelDB, SQL Server LocalDB and Lucene in that they all run in-process. What sets ResinDB apart is its full-text search index, its scoring mechanisms and its latch-free writing.
 
 ## Usage
 ### CLI
@@ -103,7 +103,7 @@ A value block is a byte array prepended with a size byte array. The value byte a
 
 The name (key) of each column is also a variable length byte array with maximum `sizeof(int)` number of elements.
 
-A document table can contain a maximum of `32767` distinctly named columns (i.e. `sizeof(short)`) and a maximum of `2.1 x 10^9` rows (i.e. `sizeof(int)`).
+A document table can contain a maximum of 32767 distinctly named columns (i.e. `sizeof(short)`) and a maximum of 2.1 x 10^9 rows (i.e. `sizeof(int)`).
 
 [DocumentTable specification](DocumentTable.md)  
 
@@ -126,7 +126,7 @@ Resin creates and maintains an index per document field.
 
 You can opt out of indexing entirely. You can index verbatim (unanalyzed) data. You can choose to store data both is its original and its analyzed state, or you can choose to store either one of those.
 
-Indexed fields (both analyzed and unanalyzed) can participate in queries. Primary keys or paths used as identifiers should not be analyzed but certanly indexed and if they're significant enough, also stored.
+`Indexed` fields, both `analyzed` and `unanalyzed`, can participate in queries. Primary keys or paths used as identifiers should not be analyzed but certanly indexed and if they're significant enough, also `stored`.
 
 ## Compression
 Analyzed data is compressed in a corpus-wide trie.
@@ -142,7 +142,7 @@ ResinDB's main index data structure is a disk-based doubly-linked character trie
 Scores are calculated using a vector space tf-idf bag-of-words model.
 
 ## Mapping and reducing
-Here's how the scoring mechanism works. User defines a set of documents by formulating a query composed of one or more term-based questions. A scoring function is run over the set. The result is a tree of scores, one branch per sub-query ("query clause"). The tree is flattened by applying boolean logic between the branches, paginated and finally a list of documents are fetched from the store.
+Here's how the scoring mechanism works. User defines a set of documents by formulating a query composed of one or more term-based questions. A scoring function is run over the set. The result is a tree of scores, one branch per sub-query (query clause). The tree is flattened by applying boolean logic between the branches (AND, OR, NOT), paginated and finally a list of documents are fetched from the store.
 
 E.g.:
 
@@ -170,7 +170,7 @@ __Give each word a weight (tf-idf)__:
 [null, null, 0.1, 3],   
 [0.2, null, 0.1, 3]   
 
-Documents are mapped in vector space, sorted by their distance from the query, paginated and as a final step, fetched  from the file system. 
+Documents are mapped in vector space, sorted by their distance from the query, paginated and as a final step, fetched from the file system. 
 
 __Answer__: Something you can have or possibly be.
 
@@ -191,11 +191,12 @@ Merging two forks leads to a single multi-segmented index.
 Issuing a merge operation on a single multi-segmented index results in a unisegmented index. If the merge operation was uncontended the store will now have a single branch/single segment index.
 
 ## Flexible and extensible
-Analyzers, tokenizers and scoring schemes are customizable.
+Analyzers, tokenizers, scoring schemes and storage mechanisms are customizable.
 
 Are you looking for something other than a document database or a search engine? Database builders or architects looking for Resin's indexing capabilities specifically and nothing but, can either 
+
 - integrate as a store plug-in
 - let Resin maintain a full-text index storing nothing but identifyers from your store (i.e. the master data is in your store and querying is done towards a Resin index)
 
 ## Runtime environment
-ResinDB is built for dotnet Core 1.1.
+ResinDB targets .Net Core 1.1.
