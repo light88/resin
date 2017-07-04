@@ -1,6 +1,6 @@
 # DocumentTable
 
-A document table is a table where  
+A document table is a schemaless table where  
 
 - each row has a variable amount of named columns
 - each column is a variable length byte array
@@ -17,7 +17,7 @@ A document table can contain a maximum of 32767 distinctly named columns (i.e. `
 
 ### Example of a document table with three rows and two distinctivley unique keys:  
 
-(Line breaks in file layouts are for clarity.)
+(Line breaks and spaces in file layouts are for clarity.)
 
 #### Header file  
 	key0 key1  
@@ -36,13 +36,13 @@ A document table can contain a maximum of 32767 distinctly named columns (i.e. `
   
 To fetch a row from the table you need to know the starting byte position of the row as well as its size.
 
-## BlockInfo
+### BlockInfo
 
 A block info is a tuple containing the starting byte position (long) of a block of data and its size (int). A block info is thus fixed in size. 
 
-A block info file containing block info tuples that have been serialized into a bitmap, each block ordered by the index of the document table row it points to, can act as an index into a document table that is at most 9.2 x 10^18 bytes long (i.e. sizeof(long).
+A block info file containing block info tuples that have been serialized into a bitmap, each block ordered by the index of the document table row it points to, can act as an index into a document table that is at most 9.2 x 10^18 bytes long (i.e. `sizeof(long)`).
 
-## Compression/encoding
+### Compression/encoding
 
 You may choose to compress rows in the document table. Compression flags, i.e. data describing how to decode a stored value byte array into its original state, are stored in a batch info file.
 
@@ -50,23 +50,33 @@ Batches (of rows) have unique (incrementaly and uniformly) increasing version ID
 
 Each row is compressed individually and each batch can be compressed (encoded) differently. 
 
-### Example of a file containing batch compression information:
+#### Example of a file containing batch compression information:
 
 	start_row_index end_row_index compression_flag
 
-### Byte representation:
+#### Byte representation:
 
 	long long short
 
 When using the same compression or encoding uniformly over all rows a batch info file is not needed.
 
-## Versioning
+### Versioning
 
 Inserting a document with a primary key into a document table and then performing an update on that document will make it appear twice in the table file but with different row IDs. Those two occurrances also differ because they belong to different batches. 
 
 Batches are timestamped. When reading from a document table only the last version, chronologically speaking, should be fetched.
 
-## Implementations
+### Pros and cons
+
+#### Pro
+
+Because it's schemaless, writing to a document table require no knowledge of previous columns arrangements :)
+
+#### Cons
+
+It's schemaless and everything is a row :(
+
+### Implementations
 #### A document table row
 [DocumentTableRow](https://github.com/kreeben/resin/blob/master/src/ResinCore/Document.cs#L38)
 #### A writer that takes a document row and returns a [BlockInfo](https://github.com/kreeben/resin/blob/master/src/ResinCore/IO/BlockInfo.cs)
