@@ -9,11 +9,11 @@ A normal table, such as one from a RDBM system, does not allow storing of data i
 
 On disk a document table can be represented as a header file and a table file where the header file is a column name index and where each row in the table file contains alternating keyID and value blocks, one pair for each of the row's columns. 
 
-A value block is a byte array prepended with a size byte array. The max size of a value byte array is 2.1 x 10^9, i.e. `sizeof(int)`.
+A value block is a byte array prepended with a size byte array. The value byte array can be at most `sizeof(int)` bytes long.
 
-The name (key) of each column is also a variable length byte array with a maximum length of 2.1 x 10^9.
+The name (key) of each column is also a variable length byte array with maximum `sizeof(int)` number of elements.
 
-A document table can contain a maximum of 32767 distinctly named columns (i.e. sizeof(short)) and a maximum of 2.1 x 10^9 rows.
+A document table can contain a maximum of 32767 distinctly named columns (i.e. `sizeof(short)`) and a maximum of 2.1 x 10^9 rows (i.e. `sizeof(int)`).
 
 ### Example of a document table with three rows and two distinctivley unique keys:  
 
