@@ -13,11 +13,11 @@ namespace Resin
         {
             var analyzed = analyzer.AnalyzeDocument(document);
 
-            foreach (var term in analyzed.Words)
+            foreach (var word in analyzed.Words)
             {
-                var field = term.Term.Field;
-                var token = term.Term.Word.Value;
-                var posting = term.Posting;
+                var field = word.Term.Field;
+                var token = word.Term.Word.Value;
+                var posting = word.Posting;
 
                 trieBuilder.Add(new WordInfo(field, token, posting));
             }
