@@ -13,31 +13,31 @@ namespace Resin.IO
     {
         protected static readonly ILog Log = LogManager.GetLogger(typeof(TrieBuilder));
         
-        private readonly IDictionary<string, BlockingCollection<IList<WordInfo>>> _queues;
+        private readonly IDictionary<string, BlockingCollection<WordInfo>> _queues;
         private readonly IDictionary<string, LcrsTrie> _tries;
         private readonly IList<Task> _consumers;
         private readonly Stopwatch _timer = new Stopwatch();
 
         public TrieBuilder()
         {
-            _queues = new Dictionary<string, BlockingCollection<IList<WordInfo>>>();
+            _queues = new Dictionary<string, BlockingCollection<WordInfo>>();
             _consumers = new List<Task>();
             _tries = new Dictionary<string, LcrsTrie>();
         }
 
-        public void Add(string fieldName, IList<WordInfo> words)
+        public void Add(WordInfo word)
         {
             _timer.Start();
 
-            BlockingCollection<IList<WordInfo>> queue;
+            BlockingCollection<WordInfo> queue;
 
-            if (!_queues.TryGetValue(fieldName, out queue))
+            if (!_queues.TryGetValue(word.Field, out queue))
             {
-                queue = new BlockingCollection<IList<WordInfo>>();
+                queue = new BlockingCollection<WordInfo>();
 
-                _queues.Add(fieldName, queue);
+                _queues.Add(word.Field, queue);
 
-                var key = fieldName.ToHash().ToString();
+                var key = word.Field.ToHash().ToString();
 
                 InitTrie(key);
 
@@ -45,18 +45,15 @@ namespace Resin.IO
                 {
                     try
                     {
-                        Log.InfoFormat("building in-memory tree for field {0}", fieldName);
+                        Log.InfoFormat("building in-memory tree for field {0}", word.Field);
 
                         var trie = _tries[key];
 
                         while (true)
                         {
-                            var list = queue.Take();
+                            var w = queue.Take();
 
-                            foreach (var word in list)
-                            {
-                                trie.Add(word.Token, word.Posting);
-                            }
+                            trie.Add(w.Token, w.Posting);
                         }
                     }
                     catch (InvalidOperationException)
@@ -66,7 +63,7 @@ namespace Resin.IO
                 }));
             }
 
-            queue.Add(words);
+            queue.Add(word);
         }
 
         private void InitTrie(string key)
