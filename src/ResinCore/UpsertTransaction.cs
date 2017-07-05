@@ -68,7 +68,6 @@ namespace Resin
         {
             if (_committed) return _indexVersionId;
 
-            var ts = new List<Task>();
             var trieBuilder = new TrieBuilder();
             var posFileName = Path.Combine(
                 _directory, string.Format("{0}.{1}", _indexVersionId, "pos"));
