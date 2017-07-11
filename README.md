@@ -16,6 +16,8 @@ Is full-text search engine | &#9989; | &#9989; |   |   |   |
 Has latch-free writing | &#9989; |   |   |   |  
 Has pluggable storage engine | &#9989; |   |   |   |  
 
+[An assessment of Resin 1](https://ayende.com/blog/178945/reviewing-resin-part-i).
+
 ## ResinDB is designed to be used as  
 
 - a data store
